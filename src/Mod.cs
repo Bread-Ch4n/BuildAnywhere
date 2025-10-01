@@ -6,7 +6,13 @@ using Il2CppMonomiPark.SlimeRancher.World;
 using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(Mod), "BuildAnywhere", "1.0.0", "Bread-Chan", "")]
+[assembly: MelonInfo(
+    typeof(Mod),
+    "BuildAnywhere",
+    "1.0.0",
+    "Bread-Chan",
+    "https://www.nexusmods.com/slimerancher2/mods/107"
+)]
 [assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 
 namespace BuildAnywhere;
