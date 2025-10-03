@@ -9,7 +9,7 @@ using UnityEngine;
 [assembly: MelonInfo(
     typeof(Mod),
     "BuildAnywhere",
-    "1.0.0",
+    "1.1.0",
     "Bread-Chan",
     "https://www.nexusmods.com/slimerancher2/mods/107"
 )]
@@ -49,20 +49,46 @@ public class Mod : MelonMod
                 }
             );
 
-        [HarmonyPostfix]
-        private static void Postfix(ref bool __result) => __result = false;
+        [HarmonyPrefix]
+        private static bool Postfix(ref bool __result)
+        {
+            __result = false;
+            return false;
+        }
     }
 
-    [HarmonyPatch(typeof(Gadget), "IsOverlapping", typeof(float), typeof(LayerMask), typeof(bool))]
-    [HarmonyPostfix]
-    private static void Gadget_IsOverlapping(ref bool __result) => __result = false;
+    [HarmonyPatch(
+        typeof(Gadget),
+        nameof(Gadget.IsOverlapping),
+        typeof(float),
+        typeof(LayerMask),
+        typeof(bool)
+    )]
+    [HarmonyPrefix]
+    private static bool Gadget_IsOverlapping(ref bool __result)
+    {
+        __result = false;
+        return false;
+    }
+
+    [HarmonyPatch(typeof(Gadget), nameof(Gadget.IsCompletelyGrounded))]
+    [HarmonyPrefix]
+    private static bool Gadget_IsCompletelyGrounded(ref bool __result)
+    {
+        __result = true;
+        return false;
+    }
 
     [HarmonyPatch(typeof(GadgetItem), nameof(GadgetItem.IsPlacementValid))]
-    [HarmonyPostfix]
-    private static void GadgetItem_IsPlacementValid(GadgetItem __instance, ref bool __result)
+    [HarmonyPrefix]
+    private static bool GadgetItem_IsPlacementValid(GadgetItem __instance, ref bool __result)
     {
         __instance.SetGadgetPlacementValidity(true);
+        __instance._isPlacementValid = true;
+        __instance._isGrounded = true;
+        __instance._isPlacementBlocked = false;
         __result = true;
+        return false;
     }
 
     #endregion
